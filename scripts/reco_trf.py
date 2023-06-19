@@ -29,6 +29,9 @@ parser.add_argument('--nov','--numberOfEvents', action='store', dest='numberOfEv
 parser.add_argument('-l', '--outputLevel', action='store', dest='outputLevel', required = False, type=str, default='INFO',
                     help = "The output level messenger.")
 
+parser.add_argument('-f', '--doForward', action='store', dest='doForward', required = False, type=bool, default=False,
+                    help = "Build forward rings?")
+
 
 
 
@@ -37,6 +40,8 @@ if len(sys.argv)==1:
   sys.exit(1)
 
 args = parser.parse_args()
+
+doForward = args.doForward
 
 outputLevel = LoggingLevel.fromstring(args.outputLevel)
 
@@ -70,7 +75,28 @@ try:
                               HistogramPath   = "Expert/Clusters",
                               OutputLevel     = outputLevel )
 
-  rings   = CaloRingsMaker(   "CaloRingsMaker",
+  # build rings for forward electron candidates (2.5<|eta|<3.2) only if -f True
+  if(doForward == True):
+    rings   = CaloRingsMaker(   "CaloRingsMaker",
+                              RingerKey     = recordable("Rings"),
+                              ClusterKey    = recordable("Clusters"),
+                              DeltaEtaRings = [0.1, 0.1, 0.1, 0.2, 0.2, 0.2],
+                              DeltaPhiRings = [pi/32, pi/32, pi/32, pi/16, pi/16, pi/16],
+                              NRings        = [4, 4, 4, 2, 2, 2],
+                              LayerRings = [
+                                [CaloSampling.EMEC1],
+                                [CaloSampling.EMEC2],
+                                [CaloSampling.EMEC3],
+                                [CaloSampling.HEC1],
+                                [CaloSampling.HEC2],
+                                [CaloSampling.HEC3],
+                              ],
+                              HistogramPath = "Expert/Rings",
+                              OutputLevel   = outputLevel)
+
+  # default build rings in the barrel
+  else:
+    rings   = CaloRingsMaker(   "CaloRingsMaker",
                               RingerKey     = recordable("Rings"),
                               ClusterKey    = recordable("Clusters"),
                               DeltaEtaRings = [0.025,0.00325, 0.025, 0.050, 0.1, 0.1, 0.2 ],
