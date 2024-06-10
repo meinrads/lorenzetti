@@ -43,6 +43,12 @@ parser.add_argument('--bc_id_end', action='store', dest='bc_id_end', required = 
 parser.add_argument('--bc_duration', action='store', dest='bc_duration', required = False, type=int, default=25,
                     help = "The bunch crossing duration (in nanoseconds).")
 
+parser.add_argument('--etaMin', action='store', dest='etaMin', required = False, type=float, default=0,
+                    help = "Minimum eta to simulate pileup.")
+
+parser.add_argument('--etaMax', action='store', dest='etaMax', required = False, type=float, default=1.4,
+                    help = "Maximum eta to simulate pileup.")
+
 
 #
 # Extra parameters
@@ -82,7 +88,8 @@ try:
   from filters import Pileup
   pileup = Pileup( "MinimumBias",
                  Pythia8("Generator", File=minbias_file, Seed=args.seed),
-                 EtaMax         = 1.4,
+                 EtaMax         = args.etaMax,
+                 EtaMin         = args.etaMin,
                  Select         = 2,
                  PileupAvg      = args.pileupAvg,
                  PileupSigma    = args.pileupSigma,
