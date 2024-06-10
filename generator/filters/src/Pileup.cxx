@@ -17,6 +17,7 @@ Pileup::Pileup(const std::string name, IGenerator *gen):
   declareProperty( "BunchIdStart"   , m_bc_id_start=-8   );
   declareProperty( "BunchIdEnd"     , m_bc_id_end=7      );
   declareProperty( "EtaMax"         , m_etaMax=1.4       );
+  declareProperty( "EtaMin"         , m_etaMin=0.0       );
   declareProperty( "Select"         , m_select=2         );
   declareProperty( "DeltaEta"       , m_delta_eta=0.22   );
   declareProperty( "DeltaPhi"       , m_delta_phi=0.22   );
@@ -41,7 +42,7 @@ StatusCode Pileup::initialize()
 StatusCode Pileup::execute(  generator::Event &ctx )
 {
 
-  ParticleHelper::ParticleFilter det_acc_filter( m_select, m_etaMax + .05, 0.0, 0.7, 0.05 );
+  ParticleHelper::ParticleFilter det_acc_filter( m_select, m_etaMax + .05, m_etaMin, 0.7, 0.05 );
 
   const int nWin = m_bc_id_end - m_bc_id_start + 1;
   float nPileUpMean(0);
