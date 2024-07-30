@@ -304,15 +304,10 @@ float ShowerShapes::calculateLambdaCenter ( xAOD::CaloCluster *clus, std::vector
 	auto showerAxis = axis.at(0);
 	auto z_showerAxis = axis.at(0).Z();
 	auto showerCenter = axis.at(1);
-	auto z_showerCenter = axis.at(1).Z();
-	auto z_emec1 = axis.at(3).Z();
+	auto z_showerCenter = std::abs(axis.at(1).Z());
+	auto z_emec1 = std::abs(axis.at(3).Z());
 
-	if (z_showerCenter > 0) {
-		factor = (z_showerCenter - z_emec1)/z_showerAxis;
-	}
-	else {
-		factor = (z_showerCenter + z_emec1)/z_showerAxis;
-	}
+	factor = (z_showerCenter - z_emec1)/z_showerAxis;
 	LambdaCenter = (factor*showerAxis).Mag();
 	
 	return LambdaCenter;
